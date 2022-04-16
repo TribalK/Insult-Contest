@@ -10,7 +10,7 @@ class CreateRoaster {
   }
 
   decreasePopularity() {
-    const randNum = Math.floor(Math.random() * 5);
+    const randNum = Math.floor(Math.random() * 15);
     this.popularity -= randNum;
   }
 

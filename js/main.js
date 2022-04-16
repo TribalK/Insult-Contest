@@ -7,6 +7,10 @@ class CreateRoaster {
   decreasePopularity() {
     const randNum = Math.floor(Math.random() * 15);
     this.popularity -= randNum;
+
+    if(this.popularity < 0) {
+      this.popularity = 0;
+    }
   }
 
   isPopular() {

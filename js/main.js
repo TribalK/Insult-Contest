@@ -4,11 +4,6 @@ class CreateRoaster {
     this.popularity = 60;
   }
 
-  displayRoasterInfo() {
-    console.log(this.name);
-    console.log(this.popularity);
-  }
-
   decreasePopularity() {
     const randNum = Math.floor(Math.random() * 5);
     this.popularity -= randNum;
@@ -77,8 +72,6 @@ function switchPageLayout() {
 function createPlayerObject(pName) {
   let player = new CreateRoaster(pName);
 
-  player.displayRoasterInfo();
-
   return player;
 }
 
@@ -90,10 +83,8 @@ function runRoastMatch(playerOne, playerTwo) {
       const insult = await fetchInsult();
       let li = document.createElement('li');
       li.textContent = insult.insult;
-    //  li.style.listStyleType = "\2192";
 
       playerOne.decreasePopularity();
-      playerOne.displayRoasterInfo();
       const stat = playerOne.getImageStatus();
       document.querySelector('.playerOne img').src = `img/${stat}.JPG`;
       document.querySelector('.playerOne h4').innerText = `Popularity: ${playerOne.getPopularity()}`;
@@ -104,10 +95,8 @@ function runRoastMatch(playerOne, playerTwo) {
       const insult = await fetchInsult();
       let li = document.createElement('li');
       li.textContent = insult.insult;
-  //    li.style.listStyleType = "\2190";
 
       playerTwo.decreasePopularity();
-      playerTwo.displayRoasterInfo();
       const stat = playerTwo.getImageStatus();
       document.querySelector('.playerTwo img').src = `img/${stat}.JPG`;
       document.querySelector('.playerTwo h4').innerText = `Popularity: ${playerTwo.getPopularity()}`;
@@ -117,7 +106,6 @@ function runRoastMatch(playerOne, playerTwo) {
     switchTurns = !switchTurns;
 
     if(!playerOne.isPopular() || !playerTwo.isPopular()) {
-      console.log("TEST SUCCESSFUL");
       clearInterval(curInterval);
       displayWinner(playerOne, playerTwo);
     }

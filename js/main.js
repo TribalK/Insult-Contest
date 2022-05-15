@@ -1,9 +1,11 @@
+/* Two Class objects are made as Player 1 and Player 2 */
 class CreateRoaster {
   constructor(name) {
     this._name = name;
     this._popularity = 60;
   }
 
+  /* Each insult decreases the opponent's popularity */
   decreasePopularity() {
     const randNum = Math.floor(Math.random() * 15);
     this._popularity -= randNum;
@@ -13,10 +15,15 @@ class CreateRoaster {
     }
   }
 
+  /* Determines if game continues */
   isPopular() {
     return this._popularity > 0;
   }
 
+<<<<<<< HEAD
+  /* Getters */
+=======
+>>>>>>> 9bce612dd1c34e6f628b43c0822bc75864bd9d25
   get name() {
     return this._name;
   }
@@ -79,15 +86,31 @@ function createPlayerObject(pName) {
   return player;
 }
 
+/*
+  function runRoastMatch
+
+  params: playerOne object of CreateRoaster class,
+          playerTwo object of CreateRoaster class
+
+  description: creating a back-and-forth insult match that will pull
+               data from an API and cause the opposing player to lose
+               popularity until one player's popularity hits zero.
+*/
 function runRoastMatch(playerOne, playerTwo) {
+  //randomize who starts first
   let switchTurns = Math.random() > 0.5 ? true : false;
 
+  // run process on a 6 second timer =>
+  // we need to async this function to wait for one
+  // process to end before we generate the next process
   let curInterval = setInterval(async function() {
     if(switchTurns) {
+      //Player Two insults Player One
       const insult = await fetchInsult();
       let li = document.createElement('li');
       li.textContent = insult.insult;
 
+      //make visual display changes
       playerOne.decreasePopularity();
       const stat = playerOne.getImageStatus();
       document.querySelector('.playerOne img').src = `img/${stat}.JPG`;
@@ -96,10 +119,12 @@ function runRoastMatch(playerOne, playerTwo) {
 
     }
     else {
+      //Player One insults Player Two
       const insult = await fetchInsult();
       let li = document.createElement('li');
       li.textContent = insult.insult;
 
+      //make visual display changes
       playerTwo.decreasePopularity();
       const stat = playerTwo.getImageStatus();
       document.querySelector('.playerTwo img').src = `img/${stat}.JPG`;
@@ -107,8 +132,10 @@ function runRoastMatch(playerOne, playerTwo) {
       document.querySelector('.playerOne ul').appendChild(li);
 
     }
+    //Switch who starts the next turn
     switchTurns = !switchTurns;
 
+    //Check if a player has lost
     if(!playerOne.isPopular() || !playerTwo.isPopular()) {
       clearInterval(curInterval);
       displayWinner(playerOne, playerTwo);

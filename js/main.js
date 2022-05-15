@@ -20,10 +20,7 @@ class CreateRoaster {
     return this._popularity > 0;
   }
 
-<<<<<<< HEAD
   /* Getters */
-=======
->>>>>>> 9bce612dd1c34e6f628b43c0822bc75864bd9d25
   get name() {
     return this._name;
   }

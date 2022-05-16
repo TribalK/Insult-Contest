@@ -1,41 +1,45 @@
+/* Two Class objects are made as Player 1 and Player 2 */
 class CreateRoaster {
   constructor(name) {
-    this.name = name;
-    this.popularity = 60;
+    this._name = name;
+    this._popularity = 60;
   }
 
+  /* Each insult decreases the opponent's popularity */
   decreasePopularity() {
     const randNum = Math.floor(Math.random() * 15);
-    this.popularity -= randNum;
+    this._popularity -= randNum;
 
-    if(this.popularity < 0) {
-      this.popularity = 0;
+    if(this._popularity < 0) {
+      this._popularity = 0;
     }
   }
 
+  /* Determines if game continues */
   isPopular() {
-    return this.popularity > 0;
+    return this._popularity > 0;
   }
 
-  getName() {
-    return this.name;
+  /* Getters */
+  get name() {
+    return this._name;
   }
 
-  getPopularity() {
-    return this.popularity;
+  get popularity() {
+    return this._popularity;
   }
 
   getImageStatus() {
       switch(true) {
-        case (this.popularity >= 41): {
+        case (this._popularity >= 41): {
           return 'HIGH';
           break;
         }
-        case (this.popularity >= 21 && this.popularity < 41): {
+        case (this._popularity >= 21 && this._popularity < 41): {
           return 'MID';
           break;
         }
-        case (this.popularity >= 1 && this.popularity < 21): {
+        case (this._popularity >= 1 && this._popularity < 21): {
           return 'LOW';
           break;
         }
@@ -68,8 +72,8 @@ function switchPageLayout() {
   document.querySelector('.playerTwo img').src = `img/${stat2}.JPG`;
   document.querySelector('.playerOne h3').innerText = playerOneName;
   document.querySelector('.playerTwo h3').innerText = playerTwoName;
-  document.querySelector('.playerOne h4').innerText = `Popularity: ${playerOne.getPopularity()}`;
-  document.querySelector('.playerTwo h4').innerText = `Popularity: ${playerTwo.getPopularity()}`;
+  document.querySelector('.playerOne h4').innerText = `Popularity: ${playerOne.popularity}`;
+  document.querySelector('.playerTwo h4').innerText = `Popularity: ${playerTwo.popularity}`;
   runRoastMatch(playerOne, playerTwo);
 }
 
@@ -79,36 +83,56 @@ function createPlayerObject(pName) {
   return player;
 }
 
+/*
+  function runRoastMatch
+
+  params: playerOne object of CreateRoaster class,
+          playerTwo object of CreateRoaster class
+
+  description: creating a back-and-forth insult match that will pull
+               data from an API and cause the opposing player to lose
+               popularity until one player's popularity hits zero.
+*/
 function runRoastMatch(playerOne, playerTwo) {
+  //randomize who starts first
   let switchTurns = Math.random() > 0.5 ? true : false;
 
+  // run process on a 6 second timer =>
+  // we need to async this function to wait for one
+  // process to end before we generate the next process
   let curInterval = setInterval(async function() {
     if(switchTurns) {
+      //Player Two insults Player One
       const insult = await fetchInsult();
       let li = document.createElement('li');
       li.textContent = insult.insult;
 
+      //make visual display changes
       playerOne.decreasePopularity();
       const stat = playerOne.getImageStatus();
       document.querySelector('.playerOne img').src = `img/${stat}.JPG`;
-      document.querySelector('.playerOne h4').innerText = `Popularity: ${playerOne.getPopularity()}`;
+      document.querySelector('.playerOne h4').innerText = `Popularity: ${playerOne.popularity}`;
       document.querySelector('.playerTwo ul').appendChild(li);
 
     }
     else {
+      //Player One insults Player Two
       const insult = await fetchInsult();
       let li = document.createElement('li');
       li.textContent = insult.insult;
 
+      //make visual display changes
       playerTwo.decreasePopularity();
       const stat = playerTwo.getImageStatus();
       document.querySelector('.playerTwo img').src = `img/${stat}.JPG`;
-      document.querySelector('.playerTwo h4').innerText = `Popularity: ${playerTwo.getPopularity()}`;
+      document.querySelector('.playerTwo h4').innerText = `Popularity: ${playerTwo.popularity}`;
       document.querySelector('.playerOne ul').appendChild(li);
 
     }
+    //Switch who starts the next turn
     switchTurns = !switchTurns;
 
+    //Check if a player has lost
     if(!playerOne.isPopular() || !playerTwo.isPopular()) {
       clearInterval(curInterval);
       displayWinner(playerOne, playerTwo);
@@ -128,9 +152,8 @@ async function fetchInsult() {
 
 function displayWinner(playerOne, playerTwo) {
   if(playerOne.isPopular()) {
-    const playerName = playerOne.getName();
-    document.querySelector('h2').innerText = `${playerOne.getName()} wins!`;
+    document.querySelector('h2').innerText = `${playerOne.name} wins!`;
   } else {
-    document.querySelector('h2').innerText = `${playerTwo.getName()} wins!`;
+    document.querySelector('h2').innerText = `${playerTwo.name} wins!`;
   }
 }
